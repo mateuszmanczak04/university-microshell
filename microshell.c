@@ -27,6 +27,7 @@ ZROBIONE:
 
 void start();
 void showCommandPrompt();
+void cd(char[]);
 
 int main()
 {
@@ -45,11 +46,9 @@ void start()
 {
     showCommandPrompt();
 
-    char fullCommand[128];
-
     // Read the input
+    char fullCommand[128];
     fgets(fullCommand, 128, stdin);
-    printf("Full command: %s\n", fullCommand);
 
     // Remove the newline character from the input
     fullCommand[strcspn(fullCommand, "\n")] = '\0';
@@ -58,7 +57,12 @@ void start()
     char command[32];
     sscanf(fullCommand, "%s", command);
 
-    printf("Command: %s\n", command);
+    // Detect the command type
+    if (strcmp(command, "cd") == 0)
+    {
+        cd(fullCommand);
+    }
+    start();
 }
 
 /**
@@ -75,4 +79,14 @@ void showCommandPrompt()
     {
         perror("getcwd() error");
     }
+}
+
+/**
+ * Same as "cd" in Bash.
+ */
+void cd(char fullCommand[])
+{
+    char path[96];
+    int args = sscanf(fullCommand, "cd %s", path);
+    chdir(path);
 }
