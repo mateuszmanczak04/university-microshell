@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 /*
 WYMAGANIA:
@@ -20,8 +21,33 @@ WYMAGANIA:
 
 */
 
+void start();
+
 int main()
 {
-
+    start();
     return 0;
+}
+
+/**
+ * Recursive function for main app logic.
+ */
+void start()
+{
+    char fullCommand[128];
+
+    // Read the input
+    fgets(fullCommand, 128, stdin);
+    printf("Full command: %s\n", fullCommand);
+
+    // Remove the newline character from the input
+    fullCommand[strcspn(fullCommand, "\n")] = '\0';
+
+    // Extract the first word from the input
+    char command[32];
+    sscanf(fullCommand, "%s", command);
+
+    printf("Command: %s\n", command);
+
+    start();
 }
