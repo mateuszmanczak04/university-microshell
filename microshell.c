@@ -5,8 +5,6 @@
 /*
 WYMAGANIA:
 
-2 pkt. - obsługiwać polecenie cd, działające analogicznie jak cd znane nam z powłoki bash;
-
 2 pkt. - obsługiwać polecenie exit, kończące działanie programu powłoki;
 
 2 pkt. - obsługiwać polecenie help, wyświetlające na ekranie informacje o autorze programu i oferowanych przez niego funkcjonalnościach;
@@ -22,6 +20,8 @@ WYMAGANIA:
 ZROBIONE:
 
 2 pkt. - wyświetlać znak zachęty w postaci [{path}] $, gdzie {path} jest ścieżką do bieżącego katalogu roboczego;
+
+2 pkt. - obsługiwać polecenie cd, działające analogicznie jak cd znane nam z powłoki bash;
 
 */
 
