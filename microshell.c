@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 /*
 WYMAGANIA:
@@ -22,6 +23,7 @@ WYMAGANIA:
 */
 
 void start();
+void showCommandPrompt();
 
 int main()
 {
@@ -38,6 +40,8 @@ int main()
  */
 void start()
 {
+    showCommandPrompt();
+
     char fullCommand[128];
 
     // Read the input
@@ -52,4 +56,20 @@ void start()
     sscanf(fullCommand, "%s", command);
 
     printf("Command: %s\n", command);
+}
+
+/**
+ * Just print the prompt sign.
+ */
+void showCommandPrompt()
+{
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != NULL)
+    {
+        printf("[%s] $ ", cwd);
+    }
+    else
+    {
+        perror("getcwd() error");
+    }
 }
