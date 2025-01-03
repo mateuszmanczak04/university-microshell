@@ -138,11 +138,23 @@ void help()
  */
 void touch(char fullCommand[])
 {
-    // TODO: check if file already exists
     char filename[96];
     int args = sscanf(fullCommand, "touch %s", filename);
-    FILE *pFile = NULL;
+
+    FILE *pFile = fopen(filename, "r");
+    if (pFile != NULL)
+    {
+        fclose(pFile);
+        printf("File '%s' already exists.\n", filename);
+        return;
+    }
+
     pFile = fopen(filename, "w");
+    if (pFile == NULL)
+    {
+        perror("Error creating file");
+        return;
+    }
     fclose(pFile);
 }
 
