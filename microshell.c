@@ -16,3 +16,31 @@ int main()
 
     return 0;
 }
+
+void resetBoard()
+{
+}
+
+void printBoard()
+{
+}
+
+int checkFreeSpaces()
+{
+}
+
+void playerMove()
+{
+}
+
+void computerMove()
+{
+}
+
+char checkWinner()
+{
+}
+
+void printWinner(char winner)
+{
+}
