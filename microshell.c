@@ -31,6 +31,7 @@ void showCommandPrompt();
 void cd(char[]);
 void help();
 void touch(char[]);
+void cp(char[]);
 
 int main()
 {
@@ -77,6 +78,10 @@ void start()
     {
         touch(fullCommand);
     }
+    else if (strcmp(command, "cp") == 0)
+    {
+        cp(fullCommand);
+    }
     start();
 }
 
@@ -120,6 +125,7 @@ void help()
     printf("cd [path] - change current directory to [path]\n");
     printf("exit - stop the microshell\n");
     printf("touch [filename] - creates a new file with specified file name\n");
+    printf("cp [source] [destination] - creates a copy of [source] file into [destination]\n");
     printf("Author: Mateusz Manczak, https://github.com/mateuszmanczak04\n");
     printf("---------------------\n");
 
@@ -138,4 +144,41 @@ void touch(char fullCommand[])
     FILE *pFile = NULL;
     pFile = fopen(filename, "w");
     fclose(pFile);
+}
+
+void cp(char fullCommand[])
+{
+    char source[96], destination[96];
+    int args = sscanf(fullCommand, "cp %s %s", source, destination);
+    if (args != 2)
+    {
+        printf("Usage: cp [source] [destination]\n");
+        return;
+    }
+
+    FILE *srcFile = fopen(source, "r");
+    if (srcFile == NULL)
+    {
+        perror("Source file error");
+        return;
+    }
+
+    FILE *destFile = fopen(destination, "w");
+    if (destFile == NULL)
+    {
+        perror("Destination file error");
+        fclose(srcFile);
+        return;
+    }
+
+    // Maximum file size for copied files is 2048 bytes
+    char buffer[2048];
+    size_t bytesRead = fread(buffer, 1, sizeof(buffer), srcFile);
+    if (bytesRead > 0)
+    {
+        fwrite(buffer, 1, bytesRead, destFile);
+    }
+
+    fclose(srcFile);
+    fclose(destFile);
 }
