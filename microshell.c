@@ -6,8 +6,6 @@
 /*
 WYMAGANIA:
 
-2 pkt. - obsługiwać polecenie help, wyświetlające na ekranie informacje o autorze programu i oferowanych przez niego funkcjonalnościach;
-
 6 pkt. - obsługiwać dwa inne, dowolnie wybrane polecenia powłoki (chodzi tutaj np. o własną, samodzielną, średnio zaawansowaną implementację dwóch poleceń, np. cp, których kody nie były podane podczas laboratoriów, nie są rozwiązaniami zadań domowych, ani nie pochodzą ze strony Bartłomieja Przybylskiego); bardzo proste implementacje, takie jak np. echo przy pomocy printf() nie są akceptowane;
 
 6 pkt. (*) - przyjmować polecenia odwołujące się przez nazwę do programów znajdujących się w katalogach opisanych wartością zmiennej środowiskowej PATH oraz umożliwiać wywołanie tych skryptów i programów z argumentami (czyt. fork() + exec*());
@@ -23,6 +21,8 @@ ZROBIONE:
 2 pkt. - obsługiwać polecenie cd, działające analogicznie jak cd znane nam z powłoki bash;
 
 2 pkt. - obsługiwać polecenie exit, kończące działanie programu powłoki;
+
+2 pkt. - obsługiwać polecenie help, wyświetlające na ekranie informacje o autorze programu i oferowanych przez niego funkcjonalnościach;
 
 */
 
