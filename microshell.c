@@ -47,9 +47,10 @@ int main()
 
 void resetBoard()
 {
-    for (int i = 0; i < 3; i++)
+    int i, j;
+    for (i = 0; i < 3; i++)
     {
-        for (int j = 0; j < 3; j++)
+        for (j = 0; j < 3; j++)
         {
             board[i][j] = ' ';
         }
@@ -68,10 +69,11 @@ void printBoard()
 
 int checkFreeSpaces()
 {
+    int i, j;
     int freeSpaces = 9;
-    for (int i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++)
     {
-        for (int j = 0; j < 3; j++)
+        for (j = 0; j < 3; j++)
         {
             if (board[i][j] != ' ')
             {
@@ -84,9 +86,7 @@ int checkFreeSpaces()
 
 void playerMove()
 {
-    int x;
-    int y;
-
+    int x, y;
     do
     {
         printf("Enter row #(1-3): ");
@@ -95,7 +95,6 @@ void playerMove()
         printf("Enter column #(1-3): ");
         scanf("%d", &y);
         y--;
-
         if (board[x][y] != ' ')
         {
             printf("Invalid move!\n");
@@ -111,9 +110,7 @@ void playerMove()
 void computerMove()
 {
     srand(time(0));
-    int x;
-    int y;
-
+    int x, y;
     if (checkFreeSpaces() > 0)
     {
         do
@@ -121,47 +118,38 @@ void computerMove()
             x = rand() % 3;
             y = rand() % 3;
         } while (board[x][y] != ' ');
-
         board[x][y] = COMPUTER;
-    }
-    else
-    {
-        printWinner(' ');
     }
 }
 
 char checkWinner()
 {
-    // Check rows
-    for (int i = 0; i < 3; i++)
+    int i;
+    /* Check rows */
+    for (i = 0; i < 3; i++)
     {
-        if (board[i][0] == board[i][1] && board[i][1] == board[i][2] && board[i][0] != ' ')
+        if (board[i][0] == board[i][1] && board[i][1] == board[i][2])
         {
             return board[i][0];
         }
     }
-
-    // Check columns
-    for (int i = 0; i < 3; i++)
+    /* Check columns */
+    for (i = 0; i < 3; i++)
     {
-        if (board[0][i] == board[1][i] && board[1][i] == board[2][i] && board[0][i] != ' ')
+        if (board[0][i] == board[1][i] && board[1][i] == board[2][i])
         {
             return board[0][i];
         }
     }
-
-    // Check diagonals
-    if (board[0][0] == board[1][1] && board[1][1] == board[2][2] && board[0][0] != ' ')
+    /* Check diagonals */
+    if (board[0][0] == board[1][1] && board[1][1] == board[2][2])
     {
         return board[0][0];
     }
-
-    if (board[0][2] == board[1][1] && board[1][1] == board[2][0] && board[0][2] != ' ')
+    if (board[0][2] == board[1][1] && board[1][1] == board[2][0])
     {
         return board[0][2];
     }
-
-    // No winner
     return ' ';
 }
 
@@ -169,14 +157,14 @@ void printWinner(char winner)
 {
     if (winner == PLAYER)
     {
-        printf("YOU WIN!\n");
+        printf("You win!\n");
     }
     else if (winner == COMPUTER)
     {
-        printf("YOU LOSE!\n");
+        printf("You lose!\n");
     }
     else
     {
-        printf("IT'S A TIE!\n");
+        printf("It's a tie!\n");
     }
 }
