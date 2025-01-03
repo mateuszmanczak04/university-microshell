@@ -149,6 +149,11 @@ void touch(char fullCommand[])
 {
     char filename[96];
     int args = sscanf(fullCommand, "touch %s", filename);
+    if (args != 1)
+    {
+        printf("Usage: touch [filename]\n");
+        return;
+    }
 
     FILE *pFile = fopen(filename, "r");
     if (pFile != NULL)
