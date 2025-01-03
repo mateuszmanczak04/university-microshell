@@ -107,6 +107,9 @@ void cd(char fullCommand[])
     chdir(path);
 }
 
+/**
+ * Prints available commands and their usages.
+ */
 void help()
 {
     // Set visible color for the output
@@ -124,9 +127,12 @@ void help()
     printf("\033[0m]");
 }
 
+/**
+ * Creates an empty file with specified filename.
+ */
 void touch(char fullCommand[])
 {
-    // TODO: check if directory exists
+    // TODO: check if file already exists
     char filename[96];
     int args = sscanf(fullCommand, "touch %s", filename);
     FILE *pFile = NULL;
