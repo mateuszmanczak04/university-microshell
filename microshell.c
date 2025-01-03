@@ -29,6 +29,7 @@ ZROBIONE:
 void start();
 void showCommandPrompt();
 void cd(char[]);
+void help();
 
 int main()
 {
@@ -67,6 +68,10 @@ void start()
     {
         exit(0);
     }
+    else if (strcmp(command, "help") == 0)
+    {
+        help();
+    }
     start();
 }
 
@@ -94,4 +99,20 @@ void cd(char fullCommand[])
     char path[96];
     int args = sscanf(fullCommand, "cd %s", path);
     chdir(path);
+}
+
+void help()
+{
+    // Set visible color for the output
+    printf("\033[1;33m]");
+
+    printf("---------------------\n");
+    printf("Microshell tutorial\n");
+    printf("cd [path] - change current directory to [path]\n");
+    printf("exit - stop the microshell\n");
+    printf("Author: Mateusz Manczak, https://github.com/mateuszmanczak04\n");
+    printf("---------------------\n");
+
+    // Reset color
+    printf("\033[0m]");
 }
