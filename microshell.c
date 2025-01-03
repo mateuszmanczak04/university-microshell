@@ -5,7 +5,6 @@
 /*
 WYMAGANIA:
 
-
 2 pkt. - obsługiwać polecenie cd, działające analogicznie jak cd znane nam z powłoki bash;
 
 2 pkt. - obsługiwać polecenie exit, kończące działanie programu powłoki;
