@@ -38,6 +38,10 @@ int main()
             break;
         }
     }
+
+    printBoard();
+    printWinner(winner);
+
     return 0;
 }
 
