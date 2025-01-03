@@ -2,22 +2,23 @@
 
 int main()
 {
-    
-    // FILE *pF = fopen("test.txt", "a");
-    // fprintf(pF, "\nSpongebob Squarepants");
-    // fclose(pF);
 
+    FILE *pF = fopen("./test.txt", "r");
+    char buffer[255];
 
-    // if (remove("test.txt") == 0)
-    // {
-    //     printf("That file was deleted successfully\n");
-    // }
-    // else
-    // {
-    //     printf("That file was NOT deleted\n");
-    // }
+    if (pF == NULL)
+    {
+        printf("Unable to open file\n");
+    }
+    else
+    {
+        while (fgets(buffer, 255, pF) != NULL)
+        {
+            printf("%s", buffer);
+        }
+    }
 
-
+    fclose(pF);
 
     return 0;
 }
