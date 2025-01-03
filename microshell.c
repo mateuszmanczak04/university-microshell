@@ -172,6 +172,9 @@ void touch(char fullCommand[])
     fclose(pFile);
 }
 
+/**
+ * Copies the contents of one file to another.
+ */
 void cp(char fullCommand[])
 {
     char source[96], destination[96];
