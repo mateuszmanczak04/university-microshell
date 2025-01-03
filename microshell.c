@@ -25,12 +25,16 @@ void start();
 
 int main()
 {
-    start();
+    // Infinite app loop
+    while (1)
+    {
+        start();
+    }
     return 0;
 }
 
 /**
- * Recursive function for main app logic.
+ * Parse input and run following commands.
  */
 void start()
 {
@@ -48,6 +52,4 @@ void start()
     sscanf(fullCommand, "%s", command);
 
     printf("Command: %s\n", command);
-
-    start();
 }
