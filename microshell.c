@@ -96,6 +96,7 @@ void showCommandPrompt()
  */
 void cd(char fullCommand[])
 {
+    // TODO: check if directory exists
     char path[96];
     int args = sscanf(fullCommand, "cd %s", path);
     chdir(path);
