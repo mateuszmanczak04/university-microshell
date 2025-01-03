@@ -18,12 +18,19 @@ void printWinner(char);
 int main()
 {
     char winner = ' ';
-
+    resetBoard();
     return 0;
 }
 
 void resetBoard()
 {
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            board[i][j] = ' ';
+        }
+    }
 }
 
 void printBoard()
