@@ -30,6 +30,7 @@ void start();
 void showCommandPrompt();
 void cd(char[]);
 void help();
+void touch(char[]);
 
 int main()
 {
@@ -72,6 +73,10 @@ void start()
     {
         help();
     }
+    else if (strcmp(command, "touch") == 0)
+    {
+        touch(fullCommand);
+    }
     start();
 }
 
@@ -111,9 +116,20 @@ void help()
     printf("Microshell tutorial\n");
     printf("cd [path] - change current directory to [path]\n");
     printf("exit - stop the microshell\n");
+    printf("touch [filename] - creates a new file with specified file name\n");
     printf("Author: Mateusz Manczak, https://github.com/mateuszmanczak04\n");
     printf("---------------------\n");
 
     // Reset color
     printf("\033[0m]");
+}
+
+void touch(char fullCommand[])
+{
+    // TODO: check if directory exists
+    char filename[96];
+    int args = sscanf(fullCommand, "touch %s", filename);
+    FILE *pFile = NULL;
+    pFile = fopen(filename, "w");
+    fclose(pFile);
 }
