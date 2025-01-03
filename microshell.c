@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 /*
 WYMAGANIA:
-
-2 pkt. - obsługiwać polecenie exit, kończące działanie programu powłoki;
 
 2 pkt. - obsługiwać polecenie help, wyświetlające na ekranie informacje o autorze programu i oferowanych przez niego funkcjonalnościach;
 
@@ -22,6 +21,8 @@ ZROBIONE:
 2 pkt. - wyświetlać znak zachęty w postaci [{path}] $, gdzie {path} jest ścieżką do bieżącego katalogu roboczego;
 
 2 pkt. - obsługiwać polecenie cd, działające analogicznie jak cd znane nam z powłoki bash;
+
+2 pkt. - obsługiwać polecenie exit, kończące działanie programu powłoki;
 
 */
 
@@ -61,6 +62,10 @@ void start()
     if (strcmp(command, "cd") == 0)
     {
         cd(fullCommand);
+    }
+    else if (strcmp(command, "exit") == 0)
+    {
+        exit(0);
     }
     start();
 }
