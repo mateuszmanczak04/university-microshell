@@ -4,7 +4,7 @@
 
 /*
 WYMAGANIA:
-2 pkt. - wyświetlać znak zachęty w postaci [{path}] $, gdzie {path} jest ścieżką do bieżącego katalogu roboczego;
+
 
 2 pkt. - obsługiwać polecenie cd, działające analogicznie jak cd znane nam z powłoki bash;
 
@@ -19,6 +19,10 @@ WYMAGANIA:
 4 pkt. - wypisywać komunikat błędu, gdy niemożliwe jest poprawne zinterpretowanie polecenia;
 
 6 pkt. (*) - posiadać tzw. dodatkowe bajery, np. wyświetlanie loginu aktualnie zalogowanego użytkownika, obsługę kolorów, obsługę argumentów w cudzysłowach, sensowną obsługę sygnałów (np. Ctrl+Z), obsługę historii poleceń poprzez strzałki, uzupełnianie składni, itp.; punkty są przyznawane w zależności od stopnia skomplikowania problemu.
+
+ZROBIONE:
+
+2 pkt. - wyświetlać znak zachęty w postaci [{path}] $, gdzie {path} jest ścieżką do bieżącego katalogu roboczego;
 
 */
 
