@@ -5,8 +5,8 @@
 #include <sys/wait.h>
 #include <termios.h>
 
-// How long we can go to the past (10x arrow up)
-#define HISTORY_SIZE 10
+// How long we can go to the past (32x arrow up)
+#define HISTORY_SIZE 32
 
 char history[HISTORY_SIZE][128];
 int history_count = 0;
