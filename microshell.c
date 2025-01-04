@@ -346,6 +346,14 @@ void readInput(char *buffer)
             buffer[index] = '\0';
             break;
         }
+        else if (c == 127 || c == '\b') // Handle backspace
+        {
+            if (index > 0)
+            {
+                buffer[--index] = '\0';
+                printf("\b \b"); // Move cursor back, print space, move cursor back again
+            }
+        }
         else if (c == '\033') // Escape character (not physical ESC key)
         {
             c = getchar(); // Catch the first [ key
