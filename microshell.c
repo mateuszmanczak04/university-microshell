@@ -3,11 +3,21 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/wait.h>
+#include <termios.h>
 
-/*
-WYMAGANIA:
-6 pkt. (*) - posiadać tzw. dodatkowe bajery, np. wyświetlanie loginu aktualnie zalogowanego użytkownika, obsługę kolorów, obsługę argumentów w cudzysłowach, sensowną obsługę sygnałów (np. Ctrl+Z), obsługę historii poleceń poprzez strzałki, uzupełnianie składni, itp.; punkty są przyznawane w zależności od stopnia skomplikowania problemu.
-*/
+// How long we can go to the past (10x arrow up)
+#define HISTORY_SIZE 10
+
+char history[HISTORY_SIZE][128];
+int history_count = 0;
+int history_index = -1;
+
+// Handling history
+void enableRawMode();
+void disableRawMode();
+void addToHistory(char *);
+void getCommandFromHistory(char *, int);
+void readInput(char *);
 
 void start();
 void showCommandPrompt();
@@ -36,10 +46,13 @@ void start()
 
     // Read the input
     char fullCommand[128];
-    fgets(fullCommand, 128, stdin);
+    readInput(fullCommand);
 
     // Remove the newline character from the input
-    fullCommand[strcspn(fullCommand, "\n")] = '\0';
+    // fullCommand[strcspn(fullCommand, "\n")] = '\0';
+
+    // Add command to history
+    addToHistory(fullCommand);
 
     // Extract the first word from the input
     char command[32];
@@ -70,7 +83,6 @@ void start()
     {
         otherCommand(fullCommand);
     }
-    start();
 }
 
 /**
@@ -241,4 +253,133 @@ void otherCommand(char fullCommand[])
     {
         perror("There was an error when creating a child process with fork().");
     }
+}
+
+/**
+ * Turns terminal to the mode where it reacts to every keystroke.
+ */
+void enableRawMode()
+{
+    struct termios raw;
+    tcgetattr(STDIN_FILENO, &raw);
+    raw.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+}
+
+void disableRawMode()
+{
+    struct termios raw;
+    tcgetattr(STDIN_FILENO, &raw);
+    raw.c_lflag |= (ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+}
+
+/**
+ * Put the full command string into the history array.
+ */
+void addToHistory(char *command)
+{
+    if (history_count < HISTORY_SIZE)
+    {
+        // if there is enough space
+        // then add new command to the history
+        strcpy(history[history_count++], command);
+    }
+    else
+    {
+        // if entire history is occupied
+        // shift every history element to create space for new command
+        for (int i = 1; i < HISTORY_SIZE; i++)
+        {
+            strcpy(history[i - 1], history[i]);
+        }
+        strcpy(history[HISTORY_SIZE - 1], command);
+    }
+    history_index = history_count;
+}
+
+/**
+ * Get the previous/next command in the history.
+ * direction = 1 -> previous (arrow up)
+ * direction = -1 -> next (arrow down)
+ */
+void getCommandFromHistory(char *buffer, int direction)
+{
+    if (history_index >= 0)
+    {
+        // If user wants to go beyond history, nothing happens
+        if (direction == 1 && history_index > 0)
+        {
+            history_index--;
+        }
+        else if (direction == -1 && history_index < history_count - 1)
+        {
+            history_index++;
+        }
+
+        strcpy(buffer, history[history_index]);
+    }
+    else
+    {
+        printf("Something went wrong with history! history_index=%d, history_count=%d\n", history_index, history_count);
+    }
+}
+
+/**
+ * This function enables raw mode to read user input character by character. It supports
+ * navigation through command history using the up and down arrow keys. The input is stored
+ * in the provided buffer.
+ */
+void readInput(char *buffer)
+{
+    // buffer received from arguments should be original fullCommand
+
+    enableRawMode();
+    int index = 0;
+    char c;
+    while (1)
+    {
+        c = getchar();
+        if (c == '\n')
+        {
+            putchar(c);
+            buffer[index] = '\0';
+            break;
+        }
+        else if (c == '\033') // Escape character (not physical ESC key)
+        {
+            c = getchar(); // Catch the first [ key
+            // It's because presssing arrow up triggers [A and arrow up triggers [B
+            if (c == '[')
+            {
+                c = getchar();
+                if (c == 'A') // Arrow up
+                {
+                    buffer[0] = '\0';
+                    index = 0;
+                    printf("\33[2K\r"); // Clear the line
+                    showCommandPrompt();
+                    getCommandFromHistory(buffer, 1);
+                    printf("%s", buffer);
+                    index = strlen(buffer);
+                }
+                else if (c == 'B') // Arrow down
+                {
+                    buffer[0] = '\0';
+                    index = 0;
+                    printf("\33[2K\r"); // Clear the line
+                    showCommandPrompt();
+                    getCommandFromHistory(buffer, -1);
+                    printf("%s", buffer);
+                    index = strlen(buffer);
+                }
+            }
+        }
+        else
+        {
+            buffer[index++] = c;
+            putchar(c);
+        }
+    }
+    disableRawMode();
 }
