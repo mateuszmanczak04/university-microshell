@@ -2,11 +2,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <sys/wait.h>
 
 /*
 WYMAGANIA:
-6 pkt. (*) - przyjmować polecenia odwołujące się przez nazwę do programów znajdujących się w katalogach opisanych wartością zmiennej środowiskowej PATH oraz umożliwiać wywołanie tych skryptów i programów z argumentami (czyt. fork() + exec*());
-
 6 pkt. (*) - posiadać tzw. dodatkowe bajery, np. wyświetlanie loginu aktualnie zalogowanego użytkownika, obsługę kolorów, obsługę argumentów w cudzysłowach, sensowną obsługę sygnałów (np. Ctrl+Z), obsługę historii poleceń poprzez strzałki, uzupełnianie składni, itp.; punkty są przyznawane w zależności od stopnia skomplikowania problemu.
 */
 
@@ -16,6 +15,7 @@ void cd(char[]);
 void help();
 void touch(char[]);
 void cp(char[]);
+void otherCommand(char[]);
 
 int main()
 {
@@ -65,6 +65,10 @@ void start()
     else if (strcmp(command, "cp") == 0)
     {
         cp(fullCommand);
+    }
+    else
+    {
+        otherCommand(fullCommand);
     }
     start();
 }
@@ -194,4 +198,47 @@ void cp(char fullCommand[])
 
     fclose(srcFile);
     fclose(destFile);
+}
+
+/**
+ * Run any other command installed on the user's OS.
+ */
+void otherCommand(char fullCommand[])
+{
+    int id = fork();
+    if (id == 0)
+    {
+        /*
+            How it works:
+            strtok on every iteration does something like taking the first word before
+            space, adds it to the args[] array and cuts it from the original text.
+            It does it as long as there are no more words in the fullCommand.
+            Then it passes these arguments to the execvp() function, which simply
+            runs a function from user operating system.
+        */
+        char *args[128];
+        char *token = strtok(fullCommand, " ");
+        int i = 0;
+        while (token != NULL)
+        {
+            args[i++] = token;
+            token = strtok(NULL, " ");
+        }
+        args[i] = NULL;
+
+        if (execvp(args[0], args) == -1)
+        {
+            perror("There was an error with execvp() function.");
+        }
+        exit(EXIT_FAILURE);
+    }
+    else if (id > 0)
+    {
+        // Wait untile the child process is done
+        wait(NULL);
+    }
+    else
+    {
+        perror("There was an error when creating a child process with fork().");
+    }
 }
