@@ -106,6 +106,7 @@ void showCommandPrompt()
  */
 void cd(char fullCommand[])
 {
+    // TODO: fix with spaces and tabs
     char path[96];
     int args = sscanf(fullCommand, "cd %s", path);
     if (args != 1)
@@ -147,6 +148,7 @@ void help()
  */
 void touch(char fullCommand[])
 {
+    // TODO: when file exists it should change last modified date
     char filename[96];
     int args = sscanf(fullCommand, "touch %s", filename);
     if (args != 1)
@@ -217,6 +219,7 @@ void cp(char fullCommand[])
  */
 void otherCommand(char fullCommand[])
 {
+    // TODO: ctrl + c to stop the child process
     int id = fork();
     if (id == 0)
     {
