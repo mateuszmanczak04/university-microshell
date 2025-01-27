@@ -217,43 +217,44 @@ void cp(char fullCommand[])
 /**
  * Run any other command installed on the user's OS.
  */
-void otherCommand(char fullCommand[])
-{
-    // TODO: ctrl + c to stop the child process
+void otherCommand(char fullCommand[]) {
+    // Ignore SIGINT and SIGTSTP in the parent process
+    signal(SIGINT, SIG_IGN);
+    signal(SIGTSTP, SIG_IGN);
+
     int id = fork();
-    if (id == 0)
-    {
-        /*
-            How it works:
-            strtok on every iteration does something like taking the first word before
-            space, adds it to the args[] array and cuts it from the original text.
-            It does it as long as there are no more words in the fullCommand.
-            Then it passes these arguments to the execvp() function, which simply
-            runs a function from user operating system.
-        */
+    if (id == 0) {
+        // In the child process, restore default behavior for SIGINT and SIGTSTP
+        signal(SIGINT, SIG_DFL);
+        signal(SIGTSTP, SIG_DFL);
+
         char *args[128];
         char *token = strtok(fullCommand, " ");
         int i = 0;
-        while (token != NULL)
-        {
+        while (token != NULL) {
             args[i++] = token;
             token = strtok(NULL, " ");
         }
         args[i] = NULL;
 
-        if (execvp(args[0], args) == -1)
-        {
+        if (execvp(args[0], args) == -1) {
             perror("There was an error with execvp() function.");
         }
         exit(EXIT_FAILURE);
-    }
-    else if (id > 0)
-    {
-        // Wait untile the child process is done
-        wait(NULL);
-    }
-    else
-    {
+    } else if (id > 0) {
+        // Parent process: wait for the child to finish
+        int status;
+        waitpid(id, &status, WUNTRACED); // Wait for termination or suspension (SIGTSTP)
+
+        // Restore SIGINT and SIGTSTP handling for the parent process
+        signal(SIGINT, SIG_DFL);
+        signal(SIGTSTP, SIG_DFL);
+
+        // If the child was stopped (e.g., Ctrl+Z), notify the user
+        if (WIFSTOPPED(status)) {
+            printf("Child process was suspended. Resume it with `fg`.\n");
+        }
+    } else {
         perror("There was an error when creating a child process with fork().");
     }
 }
