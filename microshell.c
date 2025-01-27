@@ -5,6 +5,7 @@
 #include <sys/wait.h>
 #include <termios.h>
 #include <ctype.h>
+#include <utime.h>
 
 // How long we can go to the past (32x arrow up)
 #define HISTORY_SIZE 32
@@ -174,7 +175,6 @@ void help()
  */
 void touch(char fullCommand[])
 {
-    // TODO: when file exists it should change last modified date
     char filename[96];
     int args = sscanf(fullCommand, "touch %s", filename);
     if (args != 1)
@@ -183,21 +183,19 @@ void touch(char fullCommand[])
         return;
     }
 
-    FILE *pFile = fopen(filename, "r");
-    if (pFile != NULL)
-    {
-        fclose(pFile);
-        printf("File '%s' already exists.\n", filename);
-        return;
-    }
-
-    pFile = fopen(filename, "w");
+    FILE *pFile = fopen(filename, "a");
     if (pFile == NULL)
     {
-        perror("Error creating file");
+        perror("Error creating or modifying file");
         return;
     }
     fclose(pFile);
+
+    // Update the last modified time
+    if (utime(filename, NULL) != 0)
+    {
+        perror("Error updating file timestamp");
+    }
 }
 
 /**
