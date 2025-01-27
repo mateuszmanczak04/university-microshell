@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <termios.h>
+#include <ctype.h>
 
 // How long we can go to the past (32x arrow up)
 #define HISTORY_SIZE 32
@@ -48,8 +49,34 @@ void start()
     char fullCommand[128];
     readInput(fullCommand);
 
-    // Remove the newline character from the input
-    // fullCommand[strcspn(fullCommand, "\n")] = '\0';
+    // Replace multiple whitespaces with a single space and trim the command
+    char *src = fullCommand, *dst = fullCommand;
+    int in_whitespace = 0;
+
+    // Trim leading whitespace
+    while (*src && isspace((unsigned char)*src)) {
+        src++;
+    }
+
+    // Process the command
+    while (*src) {
+        if (isspace((unsigned char)*src)) {
+            if (!in_whitespace) {
+                *dst++ = ' ';
+                in_whitespace = 1;
+            }
+        } else {
+            *dst++ = *src;
+            in_whitespace = 0;
+        }
+        src++;
+    }
+
+    // Trim trailing whitespace
+    if (dst > fullCommand && isspace((unsigned char)*(dst - 1))) {
+        dst--;
+    }
+    *dst = '\0';
 
     // Add command to history
     addToHistory(fullCommand);
@@ -106,7 +133,6 @@ void showCommandPrompt()
  */
 void cd(char fullCommand[])
 {
-    // TODO: fix with spaces and tabs
     char path[96];
     int args = sscanf(fullCommand, "cd %s", path);
     if (args != 1)
